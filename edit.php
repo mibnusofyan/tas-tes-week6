@@ -1,22 +1,17 @@
 <?php
-// Koneksi ke database
-$conn = new mysqli("localhost", "root", "", "menara_teratai");
-
-// Periksa koneksi
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
-}
+// Include database connection
+include 'connection.php';
 
 // Periksa apakah form telah disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_POST['id'];
-    $nama = $_POST['nama'];
-    $email = $_POST['email'];
+    $tanggal = $_POST['tanggal'];
+    $tiket= $_POST['tiket'];
 
     // Query untuk update data
-    $sql = "UPDATE bookings SET nama=?, email=? WHERE id=?";
+    $sql = "UPDATE bookings SET visit_date=?, ticket_type_id=? WHERE id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $nama, $email, $id);
+    $stmt->bind_param("ssi", $tanggal, $tiket, $id);
 
     if ($stmt->execute()) {
         echo "Data berhasil diperbarui!";
@@ -51,15 +46,16 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Data</title>
+    <link rel="stylesheet" href="edit.css">
 </head>
 <body>
     <h1>Edit Data</h1>
     <form method="POST" action="">
         <input type="hidden" name="id" value="<?php echo $data['id']; ?>">
-        <label for="nama">Tanggal Kunjungan:</label>
-        <input type="text" id="nama" name="nama" value="<?php echo $data['visit_date']; ?>" required><br><br>
-        <label for="price">Price:</label>
-        <input type="price" id="price" name="price" value="<?php echo $data['total_price']; ?>" required><br><br>
+        <label for="tanggal">Tanggal Kunjungan:</label>
+        <input type="text" id="tanggal" name="tanggal" value="<?php echo $data['visit_date']; ?>" required><br><br>
+        <label for="tiket">Ticket Type:</label>
+        <input type="tiket" id="tiket" name="tiket" value="<?php echo $data['ticket_type_id']; ?>" required><br><br>
         <button type="submit">Update</button>
     </form>
 </body>
